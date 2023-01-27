@@ -1,25 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Basic Pong HTML Game</title>
-  <meta charset="UTF-8">
-  <style>
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
-
-  body {
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  </style>
-</head>
-<body>
-<canvas width="750" height="585" id="game"></canvas>
-<script>
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 const grid = 15;
@@ -200,7 +178,3 @@ document.addEventListener('keyup', function(e) {
 
 // start the game
 requestAnimationFrame(loop);
-</script>
-</body>
-</html>
-
