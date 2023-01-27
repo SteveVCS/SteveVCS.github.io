@@ -28,21 +28,13 @@ const maxPaddleY = canvas.height - grid - paddleHeight;
 
 var paddleSpeed = 6;
 var ballSpeed = 5;
-var side1= 0;
-var side2= 0;
-const canvas = document.getElementById("pong");
-const ctx = canvas.getContext("2d");
+var leftscore = 0;
+var rightscore = 0;
   
- if (ball.x < 0) {
-    side2++;
-  }
-  else if (ball.x > canvas.width) {
-    side1++;
-  }
-  context.fillStyle = 'white';
-context.font = '20px Arial';
-context.fillText(`Side 1: ${side1}`, grid * 2, 20);
-context.fillText(`Side 2: ${side2}`, canvas.width - grid * 4, 20);
+context.font = "20px Arial";
+context.fillText(leftScore, canvas.width/2 - 40, 30);
+context.fillText(rightScore, canvas.width/2 + 20,
+
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
@@ -204,6 +196,7 @@ document.addEventListener('keyup', function(e) {
     leftPaddle.dy = 0;
   }
 });
+
 // start the game
 requestAnimationFrame(loop);
 </script>
