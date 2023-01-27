@@ -161,9 +161,9 @@ function loop() {
   for (let i = grid; i < canvas.height - grid; i += grid * 2) {
     context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
   }
-  context.font = "30px Arial";
-context.fillText("Player 1: " + leftScore, 50, 50);
-context.fillText("Player 2: " + rightScore, canvas.width - 200, 50);
+  context.font = "40px serif";
+context.fillText("AWSD TEAM: " + leftScore, 50, 50);
+context.fillText("ARROW KEYS: " + rightScore, canvas.width - 200, 50);
 }
 
 // listen to keyboard events to move the paddles
