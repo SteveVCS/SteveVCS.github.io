@@ -19,8 +19,6 @@
 </head>
 <body>
 <canvas width="750" height="585" id="game"></canvas>
- ctx.font = "50px serif";
-ctx.fillText("Score", 50, 90);
 <script>
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
@@ -30,7 +28,21 @@ const maxPaddleY = canvas.height - grid - paddleHeight;
 
 var paddleSpeed = 6;
 var ballSpeed = 5;
-
+var side1= 0;
+var side2= 0;
+const canvas = document.getElementById("pong");
+const ctx = canvas.getContext("2d");
+  
+ if (ball.x < 0) {
+    side2++;
+  }
+  else if (ball.x > canvas.width) {
+    side1++;
+  }
+  context.fillStyle = 'white';
+context.font = '20px Arial';
+context.fillText(`Side 1: ${side1}`, grid * 2, 20);
+context.fillText(`Side 2: ${side2}`, canvas.width - grid * 4, 20);
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
