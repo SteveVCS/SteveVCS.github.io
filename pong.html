@@ -19,15 +19,15 @@
 </head>
 <body>
 <canvas width="750" height="585" id="game"></canvas>
-let leftScore = 0;
-let rightScore = 0;
 <script>
+let player1Score = 0;
+let player2Score = 0;
+<div id="scoreboard"></div>
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 const grid = 15;
 const paddleHeight = grid * 5; // 80
 const maxPaddleY = canvas.height - grid - paddleHeight;
-
 var paddleSpeed = 6;
 var ballSpeed = 5;
 
@@ -79,6 +79,9 @@ function collides(obj1, obj2) {
 function loop() {
   requestAnimationFrame(loop);
   context.clearRect(0,0,canvas.width,canvas.height);
+  const scoreboard = document.getElementById('scoreboard');
+  scoreboard.textContent = `Player 1: ${player1Score} - Player 2: ${player2Score}`;
+  
 
   // move paddles by their velocity
   leftPaddle.y += leftPaddle.dy;
@@ -119,20 +122,26 @@ function loop() {
   }
 
   // reset ball if it goes past paddle (but only if we haven't already done so)
-  if ( (ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
+  if (ball.x < 0 && !ball.resetting) {
+    player2Score++;
     ball.resetting = true;
-  if (ball.x < 0) {
-    rightScore++;
-  } else if (ball.x > canvas.width) {
-    leftScore++;
-  }
     // give some time for the player to recover before launching the ball again
     setTimeout(() => {
-      ball.resetting = false;
-      ball.x = canvas.width / 2;
-      ball.y = canvas.height / 2;
+        ball.resetting = false;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height / 2;
     }, 400);
-  }
+}
+else if (ball.x > canvas.width && !ball.resetting) {
+    player1Score++;
+    ball.resetting = true;
+    // give some time for the player to recover before launching the ball again
+    setTimeout(() => {
+        ball.resetting = false;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height / 2;
+    }, 400);
+}
 
   // check to see if ball collides with paddle. if they do change x velocity
   if (collides(ball, leftPaddle)) {
@@ -162,6 +171,7 @@ function loop() {
   for (let i = grid; i < canvas.height - grid; i += grid * 2) {
     context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
   }
+  context.fillText(scoreboard.textContent,canvas.width/2 - 60,30);
 }
 
 // listen to keyboard events to move the paddles
@@ -195,21 +205,10 @@ document.addEventListener('keyup', function(e) {
   if (e.which === 83 || e.which === 87) {
     leftPaddle.dy = 0;
   }
-  function displayScores() {
-    context.font = "16px Arial";
-    context.fillStyle = "white";
-    context.textAlign = "left";
-    context.fillText(leftScore, grid * 5, grid * 2);
-    context.textAlign = "right";
-    context.fillText(rightScore, canvas.width - grid * 5, grid * 2);
-}
 });
 
 // start the game
 requestAnimationFrame(loop);
-context.clearRect(0,0,canvas.width,canvas.height);
-// ...
-displayScores();
 </script>
 </body>
 </html>
