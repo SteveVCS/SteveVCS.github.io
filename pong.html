@@ -19,6 +19,8 @@
 </head>
 <body>
 <canvas width="750" height="585" id="game"></canvas>
+let leftScore = 0;
+let rightScore = 0;
 <script>
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
@@ -28,20 +30,7 @@ const maxPaddleY = canvas.height - grid - paddleHeight;
 
 var paddleSpeed = 6;
 var ballSpeed = 5;
-var leftScore = 0;
-var rightScore = 0;
- if (ball.x < 0 && !ball.resetting) {
-  rightScore++;
-  ball.resetting = true;
-  // rest of the code to reset the ball
-} else if (ball.x > canvas.width && !ball.resetting) {
-  leftScore++;
-  ball.resetting = true;
-  // rest of the code to reset the ball
-}
-context.font = "20px Arial";
-context.fillText("Score: " + leftScore, 10, 25);
-context.fillText("Score: " + rightScore, canvas.width - 100, 25);
+
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
@@ -132,7 +121,11 @@ function loop() {
   // reset ball if it goes past paddle (but only if we haven't already done so)
   if ( (ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
     ball.resetting = true;
-
+  if (ball.x < 0) {
+    rightScore++;
+  } else if (ball.x > canvas.width) {
+    leftScore++;
+  }
     // give some time for the player to recover before launching the ball again
     setTimeout(() => {
       ball.resetting = false;
@@ -202,10 +195,21 @@ document.addEventListener('keyup', function(e) {
   if (e.which === 83 || e.which === 87) {
     leftPaddle.dy = 0;
   }
+  function displayScores() {
+    context.font = "16px Arial";
+    context.fillStyle = "white";
+    context.textAlign = "left";
+    context.fillText(leftScore, grid * 5, grid * 2);
+    context.textAlign = "right";
+    context.fillText(rightScore, canvas.width - grid * 5, grid * 2);
+}
 });
 
 // start the game
 requestAnimationFrame(loop);
+context.clearRect(0,0,canvas.width,canvas.height);
+// ...
+displayScores();
 </script>
 </body>
 </html>
