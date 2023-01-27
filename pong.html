@@ -28,7 +28,20 @@ const maxPaddleY = canvas.height - grid - paddleHeight;
 
 var paddleSpeed = 6;
 var ballSpeed = 5;
-
+var leftScore = 0;
+var rightScore = 0;
+ if (ball.x < 0 && !ball.resetting) {
+  rightScore++;
+  ball.resetting = true;
+  // rest of the code to reset the ball
+} else if (ball.x > canvas.width && !ball.resetting) {
+  leftScore++;
+  ball.resetting = true;
+  // rest of the code to reset the ball
+}
+context.font = "20px Arial";
+context.fillText("Score: " + leftScore, 10, 25);
+context.fillText("Score: " + rightScore, canvas.width - 100, 25);
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
