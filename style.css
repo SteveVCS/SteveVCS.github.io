@@ -9,3 +9,24 @@
     align-items: center;
     justify-content: center;
   }
+
+  .gameOverModal{
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+
+    width: 25%;
+    height:25%;
+
+    top: 37.5%;
+    left: 37.5%;
+  }
+  .modalText{
+    color:rgb(255, 255, 255);
+    font-size: 30px;
+  }
+  .playAgainButton{
+    height: 100px;
+    width: 200px;
+    font-size: 50px;
+  }
