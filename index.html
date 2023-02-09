@@ -1,1 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Pong HTML Game</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css"></link>
+</head>
+  <body>
+    <div class="gameOverModal" id="gameOverModal">
+      <h1 class="modalText">Game over. <br/> 
+        <span id="winner"></span> won! 
+        <br/> Play Again?
+      </h1>
+      <button onclick="playAgain();" class="playAgainButton">Yes</button>
+    </div>
+    <canvas width="750" height="585" id="game"></canvas>
+    <script src="script.js"></script>
+  </body>
+</html>
 
