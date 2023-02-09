@@ -68,15 +68,15 @@ function loop() {
   leftPaddle.y += leftPaddle.dy;
 
   //Checks if computer can move paddle to match ball's movement.
-  if(loopCounter % (7 - leftScore) === 0){
+  if(loopCounter % 2 === 0 || leftScore === 6){
     if (rightPaddle.y > ball.y)
-      rightPaddle.y -= paddleSpeed;
+      rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
     else if(rightPaddle.y + rightPaddle.height < ball.y)
-      rightPaddle.y += paddleSpeed;
+      rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
     else if(ball.dy > 0)
-      rightPaddle.y += paddleSpeed;
+      rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
     else
-      rightPaddle.y -= paddleSpeed;
+      rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
 
     loopCounter = 0;
   }
@@ -145,7 +145,7 @@ function loop() {
         ball.dy = -ball.dy;
       }
       else{
-        ball.y = 20 + (Math.random() * canvas.height * 7/8);
+        ball.y = canvas.height/2;
         ball.dx = -ballSpeed;
       }
     }, 400);
@@ -233,7 +233,7 @@ function playAgain(){
   //Resetting board
   ball.resetting = false;
   ball.x = canvas.width /2;
-  ball.y = 20 + (Math.random() * canvas.height * 7/8);
+  ball.y = canvas.height/2;
   ball.dx = -ballSpeed;
 
   rightPaddle.y = context.height / 2;

@@ -15,10 +15,10 @@
     position: fixed; 
     z-index: 1; 
 
-    width: 25%;
+    width: 35%;
     height:25%;
 
-    top: 37.5%;
+    top: 25%;
     left: 37.5%;
   }
   .modalText{
