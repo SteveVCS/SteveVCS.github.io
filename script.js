@@ -236,11 +236,12 @@ function playAgain(){
   ball.y = canvas.height/2;
   ball.dx = -ballSpeed;
 
-  rightPaddle.y = context.height / 2;
-  leftPaddle.y = context.height / 2;
+  rightPaddle.y = canvas.height / 2;
+  leftPaddle.y = canvas.height / 2;
 
   finalTextShown = false;
   finalTextCounter = 0;
+  collisions = 0;
   //Begins animation of game again.
   requestAnimationFrame(loop);
 }
