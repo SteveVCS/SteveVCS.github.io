@@ -8,6 +8,11 @@ var rightScore = 0;
 var paddleSpeed = 6;
 var ballSpeed = 5;
 
+var loopCounter = 0;
+var collisions = 0;
+var showComputerLevel = false;
+var computerLevelCounter = 0;
+
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
@@ -39,7 +44,7 @@ const ball = {
   resetting: false,
 
   // ball velocity (start going to the top-right corner)
-  dx: ballSpeed,
+  dx: -ballSpeed,
   dy: -ballSpeed
 };
 
@@ -54,12 +59,27 @@ function collides(obj1, obj2) {
 
 // game loop
 function loop() {
-  requestAnimationFrame(loop);
+  loopCounter += 1;
+
+  let frameID = requestAnimationFrame(loop);
   context.clearRect(0,0,canvas.width,canvas.height);
 
   // move paddles by their velocity
   leftPaddle.y += leftPaddle.dy;
-  rightPaddle.y += rightPaddle.dy;
+
+  //Checks if computer can move paddle to match ball's movement.
+  if(loopCounter % 2 === 0 || leftScore === 6){
+    if (rightPaddle.y > ball.y)
+      rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
+    else if(rightPaddle.y + rightPaddle.height < ball.y)
+      rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
+    else if(ball.dy > 0)
+      rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
+    else
+      rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
+
+    loopCounter = 0;
+  }
 
   // prevent paddles from going through walls
   if (leftPaddle.y < grid) {
@@ -98,21 +118,42 @@ function loop() {
   // reset ball if it goes past paddle (but only if we haven't already done so)
   if ( (ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
     ball.resetting = true;
-    if (ball.x < 0) {
-    rightScore++;
-} else if (ball.x > canvas.width) {
-    leftScore++;
-}
+    if (ball.x < 0 && collisions > 0) {
+      rightScore++;
+
+    } else if (ball.x > canvas.width && collisions > 0) {
+      leftScore++;
+      showComputerLevel = true;
+      computerLevelCounter = 0;
+    }
+
+    if(leftScore === 7 || rightScore === 7){
+      context.clearRect(0,0,canvas.width,canvas.height);
+      cancelAnimationFrame(frameID);
+      return gameOver();
+    }
+
+    collisions = 0;
+
     // give some time for the player to recover before launching the ball again
     setTimeout(() => {
       ball.resetting = false;
       ball.x = canvas.width / 2;
-      ball.y = canvas.height / 2;
+      if(leftScore === 6){
+        ball.y = canvas.height/2;
+        ball.dx = -ballSpeed * 3;
+        ball.dy = -ball.dy;
+      }
+      else{
+        ball.y = canvas.height/2;
+        ball.dx = -ballSpeed;
+      }
     }, 400);
   }
 
   // check to see if ball collides with paddle. if they do change x velocity
   if (collides(ball, leftPaddle)) {
+    collisions += 1;
     ball.dx *= -1;
 
     // move ball next to the paddle otherwise the collision will happen again
@@ -120,6 +161,7 @@ function loop() {
     ball.x = leftPaddle.x + leftPaddle.width;
   }
   else if (collides(ball, rightPaddle)) {
+    collisions += 1;
     ball.dx *= -1;
 
     // move ball next to the paddle otherwise the collision will happen again
@@ -140,21 +182,31 @@ function loop() {
     context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
   }
   context.font = "30px serif";
-context.fillText("AWSD: " + leftScore, 50, 50);
-context.fillText("ARROW: " + rightScore, canvas.width - 200, 50);
+  context.fillText("You: " + leftScore, 50, 50);
+  context.fillText("Computer: " + rightScore, canvas.width - 200, 50);
+
+
+  context.fillStyle = "#ff0000";
+  context.font = "50px bold";
+  //If a user scores, display level text.
+  if(showComputerLevel && leftScore === 6 && computerLevelCounter < 60){
+    context.fillText("LVL. 7, FINAL LEVEL!", canvas.width/8, canvas.height/2);
+    computerLevelCounter += 1;
+  }
+  else if(showComputerLevel && computerLevelCounter < 60){
+    context.fillText("Computer Level: " + (leftScore + 1), canvas.width/4, canvas.height/2);
+    computerLevelCounter += 1;
+  }
+  else if (computerLevelCounter === 60){
+    showComputerLevel = false;
+    computerLevelCounter = 0;
+  }
+  context.fillStyle = "#000000";
+  context.font = "30px serif";
+
 }
 // listen to keyboard events to move the paddles
 document.addEventListener('keydown', function(e) {
-
-  // up arrow key
-  if (e.which === 38) {
-    rightPaddle.dy = -paddleSpeed;
-  }
-  // down arrow key
-  else if (e.which === 40) {
-    rightPaddle.dy = paddleSpeed;
-  }
-
   // w key
   if (e.which === 87) {
     leftPaddle.dy = -paddleSpeed;
@@ -165,12 +217,42 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+function gameOver(){
+  document.getElementById("winner").innerHTML = (leftScore > rightScore)? "You": "The Computer";
+  document.getElementById("gameOverModal").style.display = "block";
+}
+
+function playAgain(){
+  //Makes modal disappear
+  document.getElementById("gameOverModal").style.display = "none";
+
+  //Resetting scores
+  rightScore = 0;
+  leftScore = 0;
+
+  //Resetting board
+  ball.resetting = false;
+  ball.x = canvas.width /2;
+  ball.y = canvas.height/2;
+  ball.dx = -ballSpeed;
+
+  rightPaddle.y = canvas.height / 2;
+  leftPaddle.y = canvas.height / 2;
+
+  finalTextShown = false;
+  finalTextCounter = 0;
+  collisions = 0;
+  //Begins animation of game again.
+  requestAnimationFrame(loop);
+}
+
 // listen to keyboard events to stop the paddle if key is released
 document.addEventListener('keyup', function(e) {
+  /*
   if (e.which === 38 || e.which === 40) {
     rightPaddle.dy = 0;
   }
-
+  */
   if (e.which === 83 || e.which === 87) {
     leftPaddle.dy = 0;
   }
