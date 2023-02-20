@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="style.css"></link>
 </head>
-  <body>
+  <body id="body">
     <div class="gameOverModal" id="gameOverModal">
       <h1 class="modalText">Game over. <br/> 
         <span id="winner"></span> won! 
@@ -13,8 +13,19 @@
       </h1>
       <button onclick="playAgain();" class="playAgainButton">Yes</button>
     </div>
+    <form action="script.js">
+      <h3 style="color: aliceblue;">Select your background color</h3>
+      <select id="colorTheme">
+        <option value="black">Black</option>
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="cyan">Cyan</option>
+      </select>
+      <input type="button" onclick="Theme()" value="Submit">
+    </form>
+    </div>
     <canvas width="750" height="585" id="game"></canvas>
     <script src="script.js"></script>
   </body>
 </html>
-
