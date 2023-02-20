@@ -13,6 +13,13 @@ var collisions = 0;
 var showComputerLevel = false;
 var computerLevelCounter = 0;
 
+function Theme(){
+  var formColor;
+  var form = document.getElementById('colorTheme');
+  formColor = form.options[form.selectedIndex].text;
+  document.getElementById('body').style.backgroundColor = formColor;
+}
+
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
