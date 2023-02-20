@@ -6,7 +6,7 @@ const maxPaddleY = canvas.height - grid - paddleHeight;
 var leftScore = 0;
 var rightScore = 0;
 var paddleSpeed = 6;
-var ballSpeed = 5;
+var ballSpeed = 4;
 
 var loopCounter = 0;
 var collisions = 0;
@@ -74,8 +74,10 @@ function loop() {
   // move paddles by their velocity
   leftPaddle.y += leftPaddle.dy;
 
-  //Checks if computer can move paddle to match ball's movement.
-  if(loopCounter % 2 === 0 || leftScore === 6){
+  //Makes paddle track but adds random to occasionally miss
+  if (loopCounter % 2 === 0 || leftScore === 6){
+  if (Math.random() < 0.50) {
+  } else {
     if (rightPaddle.y > ball.y)
       rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
     else if(rightPaddle.y + rightPaddle.height < ball.y)
@@ -84,9 +86,10 @@ function loop() {
       rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
     else
       rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
-
-    loopCounter = 0;
   }
+
+  loopCounter = 0;
+}
 
   // prevent paddles from going through walls
   if (leftPaddle.y < grid) {
