@@ -7,6 +7,8 @@ var leftScore = 0;
 var rightScore = 0;
 var paddleSpeed = 6;
 var ballSpeed = 4;
+var pause = 0;
+
 
 var loopCounter = 0;
 var collisions = 0;
@@ -245,6 +247,7 @@ function playAgain(){
   ball.x = canvas.width /2;
   ball.y = canvas.height/2;
   ball.dx = -ballSpeed;
+  computerLevelCounter = 0;
 
   rightPaddle.y = canvas.height / 2;
   leftPaddle.y = canvas.height / 2;
@@ -255,6 +258,17 @@ function playAgain(){
   //Begins animation of game again.
   requestAnimationFrame(loop);
 }
+
+function restart(){
+  leftScore = 0;
+  rightScore = 0;
+  leftPaddle.y = canvas.height/2;
+  rightPaddle.y = canvas.height/2;
+  ball.x = canvas.width /2;
+  ball.y = canvas.height/2;
+}
+
+
 
 // listen to keyboard events to stop the paddle if key is released
 document.addEventListener('keyup', function(e) {
@@ -268,5 +282,7 @@ document.addEventListener('keyup', function(e) {
   }
 });
 
+
 // start the game
 requestAnimationFrame(loop);
+
