@@ -13,6 +13,15 @@ var collisions = 0;
 var showComputerLevel = false;
 var computerLevelCounter = 0;
 
+var playerMode = 1;
+
+function Theme(){
+  var formColor;
+  var form = document.getElementById('colorTheme');
+  formColor = form.options[form.selectedIndex].text;
+  document.getElementById('body').style.backgroundColor = formColor;
+}
+
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
@@ -67,23 +76,13 @@ function loop() {
   // move paddles by their velocity
   leftPaddle.y += leftPaddle.dy;
 
-  //Makes paddle track but adds random to occasionally miss
-  if (loopCounter % 2 === 0 || leftScore === 6){
-  if (Math.random() < 0.50) {
-  } else {
-    if (rightPaddle.y > ball.y)
-      rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
-    else if(rightPaddle.y + rightPaddle.height < ball.y)
-      rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
-    else if(ball.dy > 0)
-      rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
-    else
-      rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
+  if (playerMode == 1) {
+    onePlayer();
+  } else if (playerMode == 2) {
+    twoPlayer();
   }
 
-  loopCounter = 0;
-}
-
+  
   // prevent paddles from going through walls
   if (leftPaddle.y < grid) {
     leftPaddle.y = grid;
@@ -208,6 +207,7 @@ function loop() {
   context.font = "30px serif";
 
 }
+
 // listen to keyboard events to move the paddles
 document.addEventListener('keydown', function(e) {
   // w key
@@ -260,6 +260,46 @@ document.addEventListener('keyup', function(e) {
     leftPaddle.dy = 0;
   }
 });
+
+function onePlayer() {
+  playerMode = 1;
+  if (loopCounter % 2 === 0 || leftScore === 6){
+    if (Math.random() < 0.50) {
+    } else {
+      if (rightPaddle.y > ball.y)
+        rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
+      else if(rightPaddle.y + rightPaddle.height < ball.y)
+        rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
+      else if(ball.dy > 0)
+        rightPaddle.y += paddleSpeed * (leftScore + 6)/ 12;
+      else
+        rightPaddle.y -= paddleSpeed * (leftScore + 6)/ 12;
+    }
+    
+    loopCounter = 0;
+   }
+}
+
+function twoPlayer() {
+  playerMode = 2;
+  document.addEventListener('keydown' ,function(e) {
+    // up arrow key
+    if (e.which === 38) {
+      rightPaddle.dy = -paddleSpeed;
+    }
+    // down arrow key
+    else if (e.which === 40) {
+      rightPaddle.dy = paddleSpeed;
+    }
+  });
+
+  document.addEventListener('keyup', function (e) {
+    if (e.which === 38 || e.which === 40) {
+      rightPaddle.dy = 0;
+    }
+  });
+}
+
 
 // start the game
 requestAnimationFrame(loop);
